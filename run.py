@@ -15,6 +15,36 @@ SHEET = GSPREAD_CLIENT.open('Stock Allocation Tool: Dummy Data')
 
 inventory_data = SHEET.worksheet('dummy data')
 
-data =  inventory_data.get_all_values()
+data = inventory_data.get_all_values()
 
-print(data)
+
+def introduction():
+    """
+    Prints a welcome message to the user.
+    """
+    print(f"{'#' * 50}")
+    print(f"{' ' * 50}")
+    print("Welcome to the stock allocation tool!")
+    print(f"{' ' * 50}")
+    print(f"{'#' * 50}")
+    print(f"{' ' * 50}")
+
+
+def show_menu():
+    """
+    Presents the main menu to the user and requests input.
+    """
+    options = ["1) Instructions", "2) Import Data", "3) Export Replenishment",
+    "4) Adjust Variables", "5) Query Data", "6) Exit"]
+    print(f"Please select an operation:\n")
+    for option in options:
+        print(f"{option}\n")
+    print("To select an option, type the corresponding number, and press Enter.")
+
+
+def main():
+    introduction()
+    show_menu()
+
+
+main()
