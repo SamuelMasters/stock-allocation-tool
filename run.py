@@ -3,6 +3,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 from pprint import pprint
 import time
+from os import system, name
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -41,10 +42,22 @@ def show_menu():
         "4) Adjust Variables", "5) Query Data", "6) Exit"]
     print(f"{'-' * 50}")
     print(f"Please select an operation:\n")
-    time.sleep(1.5)
+    time.sleep(1)
     for option in options:
         print(f"{option}\n")
-    selection = input(f"To select an option, type the corresponding number, and press Enter.\n")
+        time.sleep(0.5)
+
+    while True:
+        try:
+            selection = int(input(f"To select an option, type the corresponding number, and press Enter.\n"))
+            if selection not in range(1,7):
+                raise ValueError(
+                    f"Please enter a value between 1 and 6, you entered {selection}"
+                )
+            break
+        except ValueError as e:
+            print(f"Invalid data: {e}. Please try again.\n")            
+
     return selection
 
 
@@ -64,7 +77,7 @@ def get_col_values(col):
     Returns and prints all values from the specified column.
     """
     print(f"Retrieving data...\n")
-    time.sleep(2)
+    time.sleep(1.5)
     col_values = inventory_data.col_values(col)
     pprint(col_values)
     return col_values
@@ -75,7 +88,7 @@ def get_all_data():
     Returns and prints all values from the connected worksheet.
     """
     print(f"Retrieving data...\n")
-    time.sleep(2)
+    time.sleep(1.5)
     all_data = inventory_data.get_all_values()
     return all_data
 
@@ -94,10 +107,49 @@ def adjust_variables():
     time.sleep(2)
 
 
+def query_data():
+    """
+    Presents options to the user that allow them to query specific
+    data points or calculations within the connected dataset. 
+    """
+
+    options = ["1. Specific SKU data", "2. SUM or AVERAGE of entire row/column", "3. All values from entire row/column"]
+    print("What data would to like to query?")
+    time.sleep(1)
+
+    for option in options:
+        print(f"{option}\n")
+        time.sleep(0.5)
+
+    x = int(input(f"To select an option, type the corresponding number, and press Enter.\n"))
+
+    if x == 1:
+        print("What SKU would you like to query?")
+    elif x == 2:
+        print("What operation will you request?")
+    elif x == 3:
+        print("Which row or column would you like to examine?")
+    else:
+        print("Input not recognised. Please try again.")
+
+
+def clear():
+    """
+    Clears the CLI. Found on https://www.geeksforgeeks.org/clear-screen-python/.
+    """
+    if name == 'nt':
+        _ = system('cls')
+    else:
+        _ = system('clear')
+
+
 def quit_program():
     """
+    Closes the program. 
     """
     print("Exiting application...")
+    time.sleep(2)
+    clear()
     exit()
 
 
@@ -111,8 +163,7 @@ def handle_input(x):
     elif x == 4:
         adjust_variables()
     elif x == 5:
-        all_data = get_all_data()
-        pprint(all_data)
+        query_data()
     elif x == 6:
         quit_program()
     else:
@@ -124,7 +175,9 @@ def main():
     time.sleep(2)
 
     while True:
+        clear()
         x = int(show_menu())
         handle_input(x)
+
 
 main()
