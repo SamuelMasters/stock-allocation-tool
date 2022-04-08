@@ -11,13 +11,15 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive"
     ]
 
+# Variable setup for connection to Google Sheets
 CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('Stock Allocation Tool: Dummy Data')
-
 inventory_data = SHEET.worksheet('dummy data')
 
+
+# Declaration of initial variables
 data = inventory_data.get_all_values()
 overstock = 1
 
@@ -60,6 +62,34 @@ def show_menu():
 
     return selection
 
+
+class Row:
+    """ A dictionary constructor for each row in the dataset """
+    def __init__(self, sku, country, price, revenue, units_sold, daily_average, available, inbound, days_supply):
+        self.sku = sku
+        self.country = country
+        self.price = price
+        self.revenue = revenue
+        self.units_sold = units_sold
+        self.daily_average = daily_average
+        self.available = available
+        self.inbound = inbound
+        self.days_supply = days_supply
+
+
+num_of_total_rows = len(inventory_data.col_values(1)) + 1
+print(f"\nThere are {num_of_total_rows} rows in total.\n")
+master_dict = {}
+
+for i in range(1, num_of_total_rows):
+    current_row = inventory_data.row_values(i)
+    key = current_row[0] + '_' + current_row[1]
+    value = Row(current_row[0], current_row[1], current_row[2], current_row[3], current_row[4], current_row[5], current_row[6], current_row[7], current_row[8])
+    master_dict[key] = value
+
+print(f"\nPrinting master dictionary...\n")
+pprint(master_dict)
+print(master_dict.get("Test SKU1_NA"))
 
 def get_specific_value(cell):
     """
@@ -113,7 +143,7 @@ def query_data():
     data points or calculations within the connected dataset. 
     """
 
-    options = ["1. Specific SKU data", "2. SUM or AVERAGE of entire row/column", "3. All values from entire row/column"]
+    options = ["1) Specific SKU data", "2) SUM or AVERAGE of entire row/column", "3) All values from entire row/column"]
     print("What data would to like to query?")
     time.sleep(1)
 
@@ -124,13 +154,25 @@ def query_data():
     x = int(input(f"To select an option, type the corresponding number, and press Enter.\n"))
 
     if x == 1:
-        print("What SKU would you like to query?")
+        print("Retreiving SKUs...")
+        # target = target_SKU()
+        pprint(inventory_data.get_all_records())
+        target = input("Which SKU would you like to query?")
+        # Run a function to proceed with request here, taking target as parameter
     elif x == 2:
         print("What operation will you request?")
+        # Run a function to print a list of multiple options, SUM, AVERAGE, RANGE
     elif x == 3:
         print("Which row or column would you like to examine?")
+        # Run a function to target and return values from a row or column
     else:
         print("Input not recognised. Please try again.")
+
+
+def target_SKU():
+    """
+
+    """
 
 
 def clear():
@@ -180,4 +222,4 @@ def main():
         handle_input(x)
 
 
-main()
+# main()
