@@ -3,6 +3,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 from pprint import pprint
 import time
+import csv
 from os import system, name
 
 SCOPE = [
@@ -22,8 +23,10 @@ inventory_data = SHEET.worksheet('dummy data')
 # Declaration of initial variables
 data = inventory_data.get_all_values()
 overstock = 1
+dos_target = 50
 master_dict = {}
 sku_list = []
+pick_list = []
 
 
 def introduction():
@@ -96,8 +99,8 @@ def capture_data():
         master_dict[key] = value
         sku_list.append(key)
 
-    print(f"Data cached successfully.\n")
-    pprint(master_dict)
+    del master_dict["Merchant SKU_Country"]
+    print(f"Data cached successfully!\n")
     print(f"Moving to main menu...\n")
     time.sleep(3)
 
@@ -165,14 +168,15 @@ def query_data():
     x = int(input(f"To select an option, type the corresponding number, and press Enter.\n"))
 
     if x == 1:
-        print("Retrieving SKUs...")
+        print("Retrieving SKU list...")
         pprint(sku_list)
         
         while True:
-            target = input(f"Which SKU would you like to query? Please type it exactly as it appears in the list.\n")
+            target = input(f"Which SKU would you like to query? Please type it exactly as it appears in the list, without quotation marks, and press Enter.\n")
             if handle_other_input(target, "sku exist"):
                 break
-
+        
+        print(f"\nValid SKU entered!\n")
         query_sku(target)
 
     elif x == 2:
@@ -191,7 +195,7 @@ def query_sku(sku):
     Retrieves specific data points from master_dict for user-specified SKU.
     """
     options = ["1) Price", "2) 30-Day Revenue", "3) 30-Day Units Sold", "4) 30-Day Daily Average", "5) Units Available in Stock", "6) Units Inbound to Warehouse", "7) Days of Supply (exc. Inbound Stock)", "8) Days of Supply (inc. Inbound Stock)"]
-    print(f"\nWhat data do you wish to see for this SKU?")
+    print(f"\nWhat data do you wish to see for this SKU?\n")
     time.sleep(1)
 
     for option in options:
@@ -243,6 +247,27 @@ def query_sku(sku):
         z = master_dict[sku].days_supply
         print(f"Including inbound stock, {sku} has {z} days of supply remaining.")
         input("Press enter to continue...")
+
+
+def calculate_replenishment():
+    """
+    Reads data and calculates required replenishment per SKU
+    to hit days of supply target variable.
+    """
+    for key in master_dict:
+        daily_average = float(master_dict[key].daily_average)
+        current_dos = int(float(master_dict[key].days_supply))
+        if current_dos < dos_target:
+            stock_to_send = int((dos_target - current_dos) * daily_average)
+            adjusted_stock_to_send = stock_to_send * overstock
+            entry = str(key + ' : ' + str(adjusted_stock_to_send))
+            pick_list.append(entry)
+
+    print(f"\nPrinting final pick list...\n")
+    pprint(pick_list)
+    input(f"\nPress Enter to continue...")
+    # with open(r'C:\Temp\picklist.txt', 'w') as f:
+    #     f.write(str(pick_list))
 
 
 def clear():
@@ -309,7 +334,7 @@ def handle_menu_input(x):
     elif x == 2:
         capture_data()
     elif x == 3:
-        pass
+        calculate_replenishment()
     elif x == 4:
         adjust_variables()
     elif x == 5:
