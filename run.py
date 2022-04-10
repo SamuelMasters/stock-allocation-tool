@@ -25,6 +25,7 @@ overstock = 1
 master_dict = {}
 sku_list = []
 
+
 def introduction():
     """
     Prints a welcome message to the user.
@@ -96,6 +97,7 @@ def capture_data():
         sku_list.append(key)
 
     print(f"Data cached successfully.\n")
+    pprint(master_dict)
     print(f"Moving to main menu...\n")
     time.sleep(3)
 
@@ -167,16 +169,15 @@ def query_data():
         pprint(sku_list)
         
         while True:
-            target = input("Which SKU would you like to query? Please type it exactly as it appears in the list.")
+            target = input(f"Which SKU would you like to query? Please type it exactly as it appears in the list.\n")
             if handle_other_input(target, "sku exist"):
                 break
 
         query_sku(target)
 
     elif x == 2:
-        print("What operation will you request?")
-        q = input("What operation will you request?")
-        handle_other_input(q, "operation query")
+        y = input("What operation will you request?")
+        handle_other_input(y, "operation query")
         # Run a function to print a list of multiple options, SUM, AVERAGE, RANGE
     elif x == 3:
         print("Which row or column would you like to examine?")
@@ -187,7 +188,7 @@ def query_data():
 
 def query_sku(sku):
     """
-
+    Retrieves specific data points from master_dict for user-specified SKU.
     """
     options = ["1) Price", "2) 30-Day Revenue", "3) 30-Day Units Sold", "4) 30-Day Daily Average", "5) Units Available in Stock", "6) Units Inbound to Warehouse", "7) Days of Supply (exc. Inbound Stock)", "8) Days of Supply (inc. Inbound Stock)"]
     print(f"\nWhat data do you wish to see for this SKU?")
@@ -201,23 +202,47 @@ def query_sku(sku):
         x = int(input(f"To select an option, type the corresponding number, and press Enter.\n"))
         if handle_other_input(x, "sku operation"):
             break
-    
+
     if x == 1:
         # Return price
+        z = master_dict[sku].price
+        print(f"The price of {sku} is {z}.\n")
+        input("Press enter to continue...")
     elif x == 2:
         # Return revenue
+        z = master_dict[sku].revenue
+        print(f"In the last 30 days, {sku} has brought in {z} in revenue.")
+        input("Press enter to continue...")
     elif x == 3:
         # Return units sold
+        z = master_dict[sku].units_sold
+        print(f"In the last 30 days, {sku} has sold {z} units.")
+        input("Press enter to continue...")
     elif x == 4:
         # Return daily average
+        z = master_dict[sku].daily_average
+        print(f"Over the last 30 days, on average, {sku} has sold {z} units each day.")
+        input("Press enter to continue...")
     elif x == 5:
         # Return available units
+        z = master_dict[sku].available
+        print(f"There are currently {z} units available to buy for {sku}.")
+        input("Press enter to continue...")
     elif x == 6:
         # Return inbound units
+        z = master_dict[sku].inbound
+        print(f"There are currently {z} units inbound to the warehouse for {sku}.")
+        input("Press enter to continue...")
     elif x == 7:
         # Return DoS (exc. Inbound)
+        z = float(master_dict[sku].available) / float(master_dict[sku].daily_average)
+        print(f"Excluding inbound stock, {sku} has {z} days of supply remaining.")
+        input("Press enter to continue...")
     elif x == 8:
         # Return DoS (inc. Inbound)
+        z = master_dict[sku].days_supply
+        print(f"Including inbound stock, {sku} has {z} days of supply remaining.")
+        input("Press enter to continue...")
 
 
 def clear():
@@ -240,42 +265,43 @@ def quit_program():
     exit()
 
 
-def handle_other_input(x, type): # Refactoring here, use range() when checking for nums
-	"""
-	
-	"""
-	if type == "variables":
-		if x == "overstock" or x == "days of supply target":
-			return True
-		else:
-			print(f"You entered {x}, please enter either 'overstock' or 'days of supply target'")
-			return False
-	elif type == "sku exist":
-		if x in master_dict:
-			return True
-		else:
-			print("SKU not recognised - please verify spelling and try again.")
-			return False
-	elif type == "operation query":
-		if x == "sum" or x == "range" or x == "average":
-			return True
-		else:
-			print(f"You entered {x}, please enter either 'sum', 'range' or 'average.'") 
-			return False
-	elif type == "query data":
-		if x == 1 or x == 2 or x == 3:
-			return True
-		else:
-			print(f"You entered {x}, please enter a value between 1 and 3.")
-			return False
+def handle_other_input(x, type):
+    """
+    Validates input across different types of user-input. 
+    """
+    if type == "variables":
+        if x == "overstock" or x == "days of supply target":
+            return True
+        else:
+            print(f"You entered {x}, please enter either 'overstock' or 'days of supply target'.\n")
+            return False
+    elif type == "sku exist":
+        if x in master_dict:
+            return True
+        else:
+            print(f"SKU not recognised - please verify spelling and try again.\n")
+            return False
+    elif type == "operation query":
+        if x == "sum" or x == "range" or x == "average":
+            return True
+        else:
+            print(f"You entered {x}, please enter either 'sum', 'range' or 'average'.\n")
+            return False
+    elif type == "query data":
+        if x in range(1, 4):
+            return True
+        else:
+            print(f"You entered {x}, please enter a value between 1 and 3.\n")
+            return False
     elif type == "sku operation":
         if x in range(1, 9):
-            return True:
+            return True
         else:
-            print(f"You entered {x}, please enter a number between 1 and 8.")
+            print(f"You entered {x}, please enter a number between 1 and 8.\n")
             return False
-	else:
-		print("Debug: no block matched within handle_other_input function.")
+    else:
+        print("Debug: no block matched within handle_other_input function.")
+
 
 def handle_menu_input(x):
     if x == 1:
