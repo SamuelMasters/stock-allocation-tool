@@ -45,10 +45,11 @@ def show_menu():
     """
     Presents the main menu to the user and requests input.
     """
-    options = ["1) Instructions", "2) Capture New Snapshot", "3) Export Replenishment",
-        "4) Adjust Variables", "5) Query Data", "6) Exit"]
+    options = ["1) Instructions", "2) Capture New Snapshot",
+                "3) Export Replenishment",
+                "4) Adjust Variables", "5) Query Data", "6) Exit"]
     print(f"{'-' * 50}")
-    print(f"Please select an operation:\n")
+    print("Please select an operation:\n")
     time.sleep(1)
     for option in options:
         print(f"{option}\n")
@@ -56,7 +57,7 @@ def show_menu():
 
     while True:
         try:
-            selection = int(input(f"To select an option, type the corresponding number, and press Enter.\n"))
+            selection = int(input("To select an option, type the corresponding number, and press Enter.\n"))
             if selection not in range(1, 7):
                 raise ValueError(
                     f"Please enter a value between 1 and 6, you entered {selection}"
@@ -66,6 +67,76 @@ def show_menu():
             print(f"Invalid data: {e}. Please try again.\n")
 
     return selection
+
+
+def instructions():
+    """
+    Prints instructions about the operation of the application
+    to the user.
+    """
+    print("\nWelcome to the Stock Allocation Tool!")
+    print(
+        "\nThis application connects to an external Google Sheet containing "
+        "inventory and sales data, and provides recommendations about what "
+        "stock should be replenished."
+    )
+    input("\nPress Enter to continue...\n")
+    print(
+        "Please note that this application is purely for educational "
+        "purposes, and is intended as a proof of concept rather than "
+        "a complete product."
+    )
+    input("\nPress Enter to continue...\n")
+    print("\n'Capture New Snapshot'")
+    print(
+        "\nThis option captures and saves data from the connected Google "
+        "Sheet, and allows that data to then be used within this "
+        "application. Please note, this process is carried out "
+        "automatically when booting up. Therefore, this function should "
+        "be used if data is changed in the Google Sheet whilst the "
+        "application is already running."
+    )
+    input("\nPress Enter to continue...\n")
+    print("\n'Export Replenishment'")
+    print(
+        "\nThis option reads the data from the connected Google Sheet, and "
+        "uses it to calculate a recommended amount of stock to replenish for "
+        "each SKU, in each market. The calculation for this is as follows: "
+    )
+    print(
+        "\nStock to Replenish = ((Target Days of Supply - Current Days of "
+        "Supply) * Daily Average) * Overstock Multiplier\n"
+    )
+    input("\nPress Enter to continue...\n")
+    print(
+        "The default values for 'Target Days of Supply' and 'Overstock "
+        "Multiplier' are 50 and 1, respectively. If you so wish, these "
+        "values can be changed by using the 'Adjust Variables' option "
+        "from the main menu."
+    )
+    input("\nPress Enter to continue...\n")
+    print("\n'Adjust Variables'")
+    print(
+        "\nThis option allows the user to manually change the values "
+        "of the 'Target Days of Supply' and 'Overstock' variables, "
+        "which as described above, are a key part of the "
+        "replenishment calculation."
+    )
+    input("\nPress Enter to continue...\n")
+    print("\n'Query Data'")
+    print(
+        "\nThis option allows the user to examine the saved data "
+        "on a more granular level. You can choose to examine "
+        "information for a specific SKU, look at all values in a "
+        "given row or column, or calculate the SUM, MEAN AVERAGE, "
+        "or RANGE of a given column."
+    )
+    input("\nPress Enter to continue...\n")
+    print("\n'Exit'")
+    print(
+        "\nThis option allows the user to safely end the program."
+    )
+    input("\nPress Enter to continue...\n")
 
 
 class Row:
@@ -87,10 +158,10 @@ def capture_data():
     Captures a snapshot of the current dataset, and creates an
     object for each row within it using the Row constructor.
     """
-    print(f"Capturing data snapshot...\n")
+    print("Capturing data snapshot...\n")
     num_of_total_rows = len(inventory_data.col_values(1)) + 1
     # print(f"\nThere are {num_of_total_rows} rows in total.\n")
-    print(f"Parsing data rows...\n")
+    print("Parsing data rows...\n")
 
     for i in range(1, num_of_total_rows):
         current_row = inventory_data.row_values(i)
@@ -100,8 +171,8 @@ def capture_data():
         sku_list.append(key)
 
     del master_dict["Merchant SKU_Country"]
-    print(f"Data cached successfully!\n")
-    print(f"Moving to main menu...\n")
+    print("Data cached successfully!\n")
+    print("Moving to main menu...\n")
     time.sleep(3)
 
 
@@ -112,8 +183,8 @@ def adjust_variables():
     global overstock
     print(f"The current overstock multiplier is set to {overstock}.\n")
     time.sleep(2)
-    overstock = float(input(f"Please type a multiplier in to represent desired overstock.\n"))
-    print(f"Adjusting variable...\n")
+    overstock = float(input("Please type a multiplier in to represent desired overstock.\n"))
+    print("Adjusting variable...\n")
     time.sleep(2)
     print(f"The overstock multiplier is now set to {overstock}.\n")
     time.sleep(2)
@@ -133,18 +204,18 @@ def query_data():
         print(f"{option}\n")
         time.sleep(0.5)
 
-    x = int(input(f"To select an option, type the corresponding number, and press Enter.\n"))
+    x = int(input("To select an option, type the corresponding number, and press Enter.\n"))
 
     if x == 1:
         print("Retrieving SKU list...")
         pprint(sku_list)
-        
+
         while True:
-            target = input(f"Which SKU would you like to query? Please type it exactly as it appears in the list, without quotation marks, and press Enter.\n")
+            target = input("Which SKU would you like to query? Please type it exactly as it appears in the list, without quotation marks, and press Enter.\n")
             if handle_other_input(target, "sku exist"):
                 break
-        
-        print(f"\nValid SKU entered!\n")
+
+        print("\nValid SKU entered!\n")
         query_sku(target)
 
     elif x == 2:
@@ -163,15 +234,15 @@ def query_sku(sku):
     Retrieves specific data points from master_dict for user-specified SKU.
     """
     options = ["1) Price", "2) 30-Day Revenue", "3) 30-Day Units Sold", "4) 30-Day Daily Average", "5) Units Available in Stock", "6) Units Inbound to Warehouse", "7) Days of Supply (exc. Inbound Stock)", "8) Days of Supply (inc. Inbound Stock)"]
-    print(f"\nWhat data do you wish to see for this SKU?\n")
+    print("\nWhat data do you wish to see for this SKU?\n")
     time.sleep(1)
 
     for option in options:
         print(f"{option}\n")
         time.sleep(0.5)
-    
+
     while True:
-        x = int(input(f"To select an option, type the corresponding number, and press Enter.\n"))
+        x = int(input("To select an option, type the corresponding number, and press Enter.\n"))
         if handle_other_input(x, "sku operation"):
             break
 
@@ -231,14 +302,14 @@ def calculate_replenishment():
             entry = str(key + ' : ' + str(adjusted_stock_to_send))
             pick_list.append(entry)
 
-    print(f"\nPrinting final pick list...\n")
+    print("\nPrinting final pick list...\n")
     pprint(pick_list)
-    input(f"\nPress Enter to continue...")
+    input("\nPress Enter to continue...")
     # with open(r'C:\Temp\picklist.txt', 'w') as f:
     #     f.write(str(pick_list))
-    with open('picklist.csv', 'w', newline = '') as csvfile:
-        my_writer = csv.writer(csvfile, delimiter = ' ')
-        my_writer.writerow(pick_list)
+    # # with open('picklist.csv', 'w', newline = '') as csvfile:
+    # #     my_writer = csv.writer(csvfile, delimiter = ' ')
+    # #     my_writer.writerow(pick_list)
 
 
 def clear():
@@ -263,7 +334,7 @@ def quit_program():
 
 def handle_other_input(x, type):
     """
-    Validates input across different types of user-input. 
+    Validates input across different types of user-input.
     """
     if type == "variables":
         if x == "overstock" or x == "days of supply target":
@@ -275,7 +346,7 @@ def handle_other_input(x, type):
         if x in master_dict:
             return True
         else:
-            print(f"SKU not recognised - please verify spelling and try again.\n")
+            print("SKU not recognised - please verify spelling and try again.\n")
             return False
     elif type == "operation query":
         if x == "sum" or x == "range" or x == "average":
@@ -301,7 +372,7 @@ def handle_other_input(x, type):
 
 def handle_menu_input(x):
     if x == 1:
-        pass
+        instructions()
     elif x == 2:
         capture_data()
     elif x == 3:
@@ -313,7 +384,7 @@ def handle_menu_input(x):
     elif x == 6:
         quit_program()
     else:
-        print(f"Input not recognised, please try again.\n")
+        print("Input not recognised, please try again.\n")
 
 
 def main():
