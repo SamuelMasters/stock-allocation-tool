@@ -105,38 +105,6 @@ def capture_data():
     time.sleep(3)
 
 
-def get_specific_value(cell):
-    """
-    Returns the value of a specific cell as specified by the user.
-    """
-    print(f"Retrieving data...\n")
-    time.sleep(2)
-    specific_value = inventory_data.acell(cell).value
-    print(specific_value)
-    return specific_value
-
-
-def get_col_values(col):
-    """
-    Returns and prints all values from the specified column.
-    """
-    print(f"Retrieving data...\n")
-    time.sleep(1.5)
-    col_values = inventory_data.col_values(col)
-    pprint(col_values)
-    return col_values
-
-
-def get_all_data():
-    """
-    Returns and prints all values from the connected worksheet.
-    """
-    print(f"Retrieving data...\n")
-    time.sleep(1.5)
-    all_data = inventory_data.get_all_values()
-    return all_data
-
-
 def adjust_variables():
     """
     Changes global variables according to user input.
@@ -268,6 +236,9 @@ def calculate_replenishment():
     input(f"\nPress Enter to continue...")
     # with open(r'C:\Temp\picklist.txt', 'w') as f:
     #     f.write(str(pick_list))
+    with open('picklist.csv', 'w', newline = '') as csvfile:
+        my_writer = csv.writer(csvfile, delimiter = ' ')
+        my_writer.writerow(pick_list)
 
 
 def clear():
