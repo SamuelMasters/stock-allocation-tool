@@ -74,6 +74,7 @@ def instructions():
     Prints instructions about the operation of the application
     to the user.
     """
+    print(f"\n{'-' * 50}\n")
     print("\nWelcome to the Stock Allocation Tool!")
     print(
         "\nThis application connects to an external Google Sheet containing "
@@ -87,6 +88,7 @@ def instructions():
         "a complete product."
     )
     input("\nPress Enter to continue...\n")
+    print(f"\n{'-' * 50}\n")
     print("\n'Capture New Snapshot'")
     print(
         "\nThis option captures and saves data from the connected Google "
@@ -97,6 +99,7 @@ def instructions():
         "application is already running."
     )
     input("\nPress Enter to continue...\n")
+    print(f"\n{'-' * 50}\n")
     print("\n'Export Replenishment'")
     print(
         "\nThis option reads the data from the connected Google Sheet, and "
@@ -115,6 +118,7 @@ def instructions():
         "from the main menu."
     )
     input("\nPress Enter to continue...\n")
+    print(f"\n{'-' * 50}\n")
     print("\n'Adjust Variables'")
     print(
         "\nThis option allows the user to manually change the values "
@@ -123,6 +127,7 @@ def instructions():
         "replenishment calculation."
     )
     input("\nPress Enter to continue...\n")
+    print(f"\n{'-' * 50}\n")
     print("\n'Query Data'")
     print(
         "\nThis option allows the user to examine the saved data "
@@ -132,11 +137,12 @@ def instructions():
         "or RANGE of a given column."
     )
     input("\nPress Enter to continue...\n")
+    print(f"\n{'-' * 50}\n")
     print("\n'Exit'")
     print(
         "\nThis option allows the user to safely end the program."
     )
-    input("\nPress Enter to continue...\n")
+    input("\nPress Enter to return to main menu...\n")
 
 
 class Row:
@@ -197,7 +203,7 @@ def query_data():
     """
 
     options = ["1) Specific SKU data", "2) SUM, AVERAGE or RANGE of entire row/column", "3) All values from entire row/column"]
-    print("What data would to like to query?")
+    print("\nWhat data would to like to query?\n")
     time.sleep(1)
 
     for option in options:
@@ -374,6 +380,8 @@ def handle_menu_input(x):
     if x == 1:
         instructions()
     elif x == 2:
+        global sku_list
+        sku_list = []
         capture_data()
     elif x == 3:
         calculate_replenishment()
