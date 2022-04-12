@@ -187,13 +187,49 @@ def adjust_variables():
     Changes global variables according to user input.
     """
     global overstock
-    print(f"The current overstock multiplier is set to {overstock}.\n")
-    time.sleep(2)
-    overstock = float(input("Please type a multiplier in to represent desired overstock.\n"))
-    print("Adjusting variable...\n")
-    time.sleep(2)
-    print(f"The overstock multiplier is now set to {overstock}.\n")
-    time.sleep(2)
+    global dos_target
+    print("\n1) Overstock\n")
+    print("2) Days of Supply Target\n")
+
+    while True:
+        x = int(input("What variable would you like to change? Please type a number and press Enter.\n"))
+        if handle_other_input(x, "variables") is True:
+            break
+
+    if x == 1:
+        print(f"\nThe current overstock multiplier is set to {overstock}.\n")
+        time.sleep(2)
+
+        while True:
+            try:
+                overstock = float(input("Please type a multiplier in to "
+                "represent desired overstock, as either a whole number "
+                "or a number to one decimal place (e.g. 1.2).\n"))
+                break
+            except ValueError as e:
+                print(f"\nInvalid input: {e}. Please try again.\n")
+
+        print(f"\nAdjusting overstock to {overstock}...")
+        time.sleep(2)
+        print("\nOverstock variable successfully changed.\n")
+        input("Press Enter to return to main menu...")
+
+    elif x == 2:
+        print(f"\nThe current days of supply target is set to {dos_target}.\n")
+        time.sleep(2)
+
+        while True:
+            try:
+                dos_target = int(input("Please enter a whole number to represent desired "
+                "days of supply target.\n"))
+                break
+            except ValueError as e:
+                print(f"\nInvalid input: {e}. Please try again.\n")
+
+        print("\nAdjusting variable...\n")
+        time.sleep(2)
+        print(f"\nThe days of supply target is now set to {dos_target}.\n")
+        input("Press Enter to return main menu...")
 
 
 def query_data():
@@ -343,10 +379,10 @@ def handle_other_input(x, type):
     Validates input across different types of user-input.
     """
     if type == "variables":
-        if x == "overstock" or x == "days of supply target":
+        if x in range(1, 3):
             return True
         else:
-            print(f"You entered {x}, please enter either 'overstock' or 'days of supply target'.\n")
+            print(f"You entered {x}, please enter either 1 or 2.\n")
             return False
     elif type == "sku exist":
         if x in master_dict:
