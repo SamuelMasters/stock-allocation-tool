@@ -27,6 +27,8 @@ dos_target = 50
 master_dict = {}
 sku_list = []
 pick_list = []
+headers = ["SKU", "Country", "Price", "30-Day Revenue", "30-Day Sales", "Daily Average", "Available Units", "Inbound Units", "Days of Supply (inc. Inbound"]
+# Used to provide information in row queries
 
 
 def introduction():
@@ -166,7 +168,6 @@ def capture_data():
     """
     print("Capturing data snapshot...\n")
     num_of_total_rows = len(inventory_data.col_values(1)) + 1
-    # print(f"\nThere are {num_of_total_rows} rows in total.\n")
     print("Parsing data rows...\n")
 
     for i in range(1, num_of_total_rows):
@@ -176,7 +177,7 @@ def capture_data():
         master_dict[key] = value
         sku_list.append(key)
 
-    del master_dict["Merchant SKU_Country"]
+    del master_dict["Merchant SKU_Country"] # Delete the entry containing headers only
     print("Data cached successfully!\n")
     print("Moving to main menu...\n")
     time.sleep(3)
@@ -238,7 +239,7 @@ def query_data():
     data points or calculations within the connected dataset.
     """
 
-    options = ["1) Specific SKU data", "2) SUM, AVERAGE or RANGE of entire row/column", "3) All values from entire row/column"]
+    options = ["1) Specific SKU data", "2) SUM, AVERAGE or RANGE of entire row/column", "3) All values from an entire row"]
     print("\nWhat data would to like to query?\n")
     time.sleep(1)
 
@@ -265,8 +266,11 @@ def query_data():
         handle_other_input(y, "operation query")
         # Run a function to print a list of multiple options, SUM, AVERAGE, RANGE
     elif x == 3:
-        print("Which row or column would you like to examine?")
-        # Run a function to target and return values from a row or column
+        num_of_total_rows = len(inventory_data.col_values(1)) - 1
+        print(f"\nThere are {num_of_total_rows} total rows. Which "
+        "would you like to examine?")
+        x = int(input(f"\nPlease type a number between 2 and {num_of_total_rows}.\n"))
+        find_row(x) # Add a try : except clause above for validation.
     else:
         print("Input not recognised. Please try again.")
 
@@ -328,6 +332,18 @@ def query_sku(sku):
         z = master_dict[sku].days_supply
         print(f"Including inbound stock, {sku} has {z} days of supply remaining.")
         input("Press enter to continue...")
+
+
+def find_row(row):
+    """
+    Find and prints all values from a specified row.
+    """
+
+    target_row = inventory_data.row_values(row)
+    pprint(headers)
+    pprint(target_row)
+
+    input("\nPress Enter to return to main menu...")
 
 
 def calculate_replenishment():
