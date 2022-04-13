@@ -239,8 +239,8 @@ def query_data():
     data points or calculations within the connected dataset.
     """
 
-    options = ["1) Specific SKU data", "2) SUM, AVERAGE or RANGE of entire row/column", "3) All values from an entire row"]
-    print("\nWhat data would to like to query?\n")
+    options = ["1) Specific SKU data", "2) SUM, AVERAGE or RANGE of entire column", "3) All values from an entire row"]
+    print("\nWhat type of query would you like to make?\n")
     time.sleep(1)
 
     for option in options:
@@ -262,9 +262,71 @@ def query_data():
         query_sku(target)
 
     elif x == 2:
-        y = input("What operation will you request?")
-        handle_other_input(y, "operation query")
-        # Run a function to print a list of multiple options, SUM, AVERAGE, RANGE
+        options = ["1) Price", "2) 30-Day Revenue", "3) 30-Days Units Sold",
+                   "4) 30-Day Daily Average", "5) Available Units",
+                   "6) Inbound Units", "7) Days of Supply "
+                   "(inc. Inbound)"]
+
+        print("\nWhat data would you like to perform a calculation on?\n")
+
+        for option in options:
+            print(f"{option}\n")
+            time.sleep(0.5)
+
+        while True:
+            try:
+                y = int(input("To select an option, type the corresponding "
+                              "number, and press Enter.\n"))
+                if y not in range(1, 8):
+                    raise ValueError(
+                        "Please enter a value between 1 and 7, you "
+                        f"entered {y}"
+                    )
+                break
+            except ValueError as e:
+                print(f"Invalid input: {e}. Please try again.\n")
+
+        print("\nWhat calculation would you like to perform on the column?\n")
+
+        options = ["1) SUM of data", "2) AVERAGE of data", "3) RANGE of data"]
+
+        for option in options:
+            print(f"{option}\n")
+            time.sleep(0.5)
+
+        while True:
+            try:
+                z = int(input("To select an option, type the corresponding "
+                              "number, and press Enter.\n"))
+                if z not in range(1, 4):
+                    raise ValueError(
+                        "Please enter a value between 1 and 3, you "
+                        f"entered {z}"
+                    )
+                break
+            except ValueError as e:
+                print(f"Invalid input: {e}. Please try again.\n")
+
+        y += 2 # Adjust number so that it can be used in following queries
+
+        if z == 1: # SUM query
+            raw_col = inventory_data.col_values(y)
+            del raw_col[0] # Removes the header string from column
+            float_list = []
+
+            for i in raw_col: # Create a new list with floats
+                float_list.append(float(i))
+
+            col_sum = round(sum(float_list), 2)
+            print(f"The SUM of all values in this list is {col_sum}.\n")
+            input("Press Enter to return to main menu...")
+        elif z == 2: # AVERAGE query
+            pass
+        elif z == 3: # RANGE query
+            pass
+
+        # Return a value to the user based on data / requested calc
+
     elif x == 3:
         num_of_total_rows = len(inventory_data.col_values(1))
         print(f"\nThere are {num_of_total_rows} total rows. Which "
@@ -420,12 +482,12 @@ def handle_other_input(x, type):
         else:
             print("SKU not recognised - please verify spelling and try again.\n")
             return False
-    elif type == "operation query":
-        if x == "sum" or x == "range" or x == "average":
-            return True
-        else:
-            print(f"You entered {x}, please enter either 'sum', 'range' or 'average'.\n")
-            return False
+    # elif type == "operation query":
+    #     if x == "sum" or x == "range" or x == "average":
+    #         return True
+    #     else:
+    #         print(f"You entered {x}, please enter either 'sum', 'range' or 'average'.\n")
+    #         return False
     elif type == "query data":
         if x in range(1, 4):
             return True
