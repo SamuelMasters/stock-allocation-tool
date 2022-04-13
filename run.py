@@ -307,7 +307,7 @@ def query_data():
             except ValueError as e:
                 print(f"Invalid input: {e}. Please try again.\n")
 
-        y += 2 # Adjust number so that it can be used in following queries
+        y += 2 # Adjust number for use in following queries
 
         if z == 1: # SUM query
             raw_col = inventory_data.col_values(y)
@@ -318,10 +318,21 @@ def query_data():
                 float_list.append(float(i))
 
             col_sum = round(sum(float_list), 2)
-            print(f"The SUM of all values in this list is {col_sum}.\n")
+            print(f"The sum of all values from the "
+                  f"specified column is {col_sum}.\n")
             input("Press Enter to return to main menu...")
         elif z == 2: # AVERAGE query
-            pass
+            raw_col = inventory_data.col_values(y)
+            del raw_col[0] # Removes the header string from column
+            float_list = []
+
+            for i in raw_col: # Create a new list with floats
+                float_list.append(float(i))
+
+            col_average = round(sum(float_list) / len(float_list), 2)
+            print("The mean average of all values from "
+                 f"the specified list is {col_average}.")
+            input("Press Enter to return to main menu...")
         elif z == 3: # RANGE query
             pass
 
