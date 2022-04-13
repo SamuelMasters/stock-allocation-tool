@@ -334,9 +334,21 @@ def query_data():
                  f"the specified list is {col_average}.")
             input("Press Enter to return to main menu...")
         elif z == 3: # RANGE query
-            pass
+            raw_col = inventory_data.col_values(y)
+            del raw_col[0] # Removes the header string from column
+            float_list = []
 
-        # Return a value to the user based on data / requested calc
+            for i in raw_col: # Create a new list with floats
+                float_list.append(float(i))
+
+            col_min = round(min(float_list), 2)
+            col_max = round(max(float_list), 2)
+
+            print("\nThe smallest value in the specified data is "
+                 f"{col_min}.")
+            print("\nThe largest value in the specified data is "
+                 f"{col_max}.")
+            input("\nPress Enter to return to main menu...")
 
     elif x == 3:
         num_of_total_rows = len(inventory_data.col_values(1))
