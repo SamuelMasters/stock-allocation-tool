@@ -266,11 +266,25 @@ def query_data():
         handle_other_input(y, "operation query")
         # Run a function to print a list of multiple options, SUM, AVERAGE, RANGE
     elif x == 3:
-        num_of_total_rows = len(inventory_data.col_values(1)) - 1
+        num_of_total_rows = len(inventory_data.col_values(1))
         print(f"\nThere are {num_of_total_rows} total rows. Which "
-        "would you like to examine?")
-        x = int(input(f"\nPlease type a number between 2 and {num_of_total_rows}.\n"))
-        find_row(x) # Add a try : except clause above for validation.
+              "would you like to examine?")
+
+        while True:
+            try:
+                x = int(input(f"\nPlease type a whole number between 1 and "
+                              f"{num_of_total_rows}.\n"))
+                if x not in range(1, num_of_total_rows):
+                    raise ValueError(
+                        f"\nPlease enter a whole number between 1 and "
+                        f"{num_of_total_rows}, you entered {x}.\n"
+                    )
+                break
+            except ValueError as e:
+                print(f"Invalid data: {e}. Please try again.\n")
+
+        find_row(x)
+
     else:
         print("Input not recognised. Please try again.")
 
@@ -423,6 +437,12 @@ def handle_other_input(x, type):
             return True
         else:
             print(f"You entered {x}, please enter a number between 1 and 8.\n")
+            return False
+    elif type == "row query":
+        if x in range(1, num_of_total_rows):
+            return True
+        else:
+            print(f"You entered {x}, please enter a whole number between {num_of_total_rows}.\n")
             return False
     else:
         print("Debug: no block matched within handle_other_input function.")
