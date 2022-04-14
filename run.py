@@ -193,18 +193,21 @@ def adjust_variables():
     print("2) Days of Supply Target\n")
 
     while True:
-        x = int(input("What variable would you like to change? Please type a number and press Enter.\n"))
-        if handle_other_input(x, "variables") is True:
-            break
+        try:
+            x = int(input("What variable would you like to change? Please type a number and press Enter.\n"))
+            if handle_other_input(x, "variables") is True:
+                break
+        except ValueError as e:
+            print(f"Invalid input: {e}. Please try again.\n")
 
     if x == 1:
-        print(f"\nThe current overstock multiplier is set to {overstock}.\n")
+        print(f"\nThe current overstock multiplier is set to x{overstock}\n")
         time.sleep(2)
 
         while True:
             try:
                 overstock = float(input("Please type a multiplier in to "
-                "represent desired overstock, as either a whole number "
+                "represent desired overstock, as either a\nwhole number "
                 "or a number to one decimal place (e.g. 1.2).\n"))
                 break
             except ValueError as e:
@@ -247,14 +250,26 @@ def query_data():
         print(f"{option}\n")
         time.sleep(0.5)
 
-    x = int(input("To select an option, type the corresponding number, and press Enter.\n"))
+    while True:
+        try:
+            x = int(input("To select an option, type the corresponding number,"
+                          " and press Enter.\n"))
+            if x not in range(1, 4):
+                raise ValueError(
+                    f"Please enter a value between 1 and 3, you entered {x}."
+                )
+            break
+        except ValueError as e:
+            print(f"Invalid data: {e}. Please try again\n")
 
     if x == 1:
         print("Retrieving SKU list...")
         pprint(sku_list)
 
         while True:
-            target = input("Which SKU would you like to query? Please type it exactly as it appears in the list, without quotation marks, and press Enter.\n")
+            target = input("\nWhich SKU would you like to query? Please "
+                           "type it exactly as it appears in the list, without"
+                           " quotation marks, and press Enter.\n")
             if handle_other_input(target, "sku exist"):
                 break
 
@@ -387,9 +402,12 @@ def query_sku(sku):
         time.sleep(0.5)
 
     while True:
-        x = int(input("To select an option, type the corresponding number, and press Enter.\n"))
-        if handle_other_input(x, "sku operation"):
-            break
+        try:
+            x = int(input("To select an option, type the corresponding number, and press Enter.\n"))
+            if handle_other_input(x, "sku operation"):
+                break
+        except ValueError as e:
+            print(f"Invalid data: {e}. Please try again.\n")
 
     if x == 1:
         # Return price
