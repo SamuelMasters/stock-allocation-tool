@@ -1,10 +1,11 @@
 # Write your code to expect a terminal of 80 characters wide and 24 rows high
+from os import system, name
+import time
+from pprint import pprint
+
 import gspread
 from google.oauth2.service_account import Credentials
-from pprint import pprint
-import time
 # import csv
-from os import system, name
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -380,7 +381,7 @@ def query_data():
             input("\nPress Enter to return to main menu...")
 
     elif x == 3:
-        num_of_total_rows = len(inventory_data.col_values(1))
+        # num_of_total_rows = len(inventory_data.col_values(1))
         print(f"\nThere are {num_of_total_rows} total rows. Which "
               "would you like to examine?")
 
@@ -409,7 +410,7 @@ def query_sku(sku):
     """
     options = ["1) Price", "2) 30-Day Revenue", "3) 30-Day Units Sold",
                "4) 30-Day Daily Average", "5) Units Available in Stock",
-               "6) Units Inbound to Warehouse", 
+               "6) Units Inbound to Warehouse",
                "7) Days of Supply (exc. Inbound Stock)",
                "8) Days of Supply (inc. Inbound Stock)"]
 
@@ -581,6 +582,9 @@ def handle_other_input(x, type):
 
 
 def handle_menu_input(x):
+    """
+    Validates input for inital main menu selection.
+    """
     if x == 1:
         instructions()
     elif x == 2:
@@ -600,6 +604,9 @@ def handle_menu_input(x):
 
 
 def main():
+    """
+    Initiates program loop on startup.
+    """
     introduction()
     time.sleep(4)
     capture_data()
