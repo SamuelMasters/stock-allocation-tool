@@ -3,7 +3,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 from pprint import pprint
 import time
-import csv
+# import csv
 from os import system, name
 
 SCOPE = [
@@ -22,12 +22,15 @@ inventory_data = SHEET.worksheet('dummy data')
 
 # Declaration of initial variables
 data = inventory_data.get_all_values()
+num_of_total_rows = len(inventory_data.col_values(1))
 overstock = 1
 dos_target = 50
 master_dict = {}
 sku_list = []
 pick_list = []
-headers = ["SKU", "Country", "Price", "30-Day Revenue", "30-Day Sales", "Daily Average", "Available Units", "Inbound Units", "Days of Supply (inc. Inbound"]
+headers = ["SKU", "Country", "Price", "30-Day Revenue", "30-Day Sales",
+           "Daily Average", "Available Units", "Inbound Units",
+           "Days of Supply (inc. Inbound)"]
 # Used to provide information in row queries
 
 
@@ -48,8 +51,8 @@ def show_menu():
     Presents the main menu to the user and requests input.
     """
     options = ["1) Instructions", "2) Capture New Snapshot",
-                "3) Export Replenishment",
-                "4) Adjust Variables", "5) Query Data", "6) Exit"]
+               "3) Export Replenishment",
+               "4) Adjust Variables", "5) Query Data", "6) Exit"]
     print(f"{'-' * 50}")
     print("Please select an operation:\n")
     time.sleep(1)
@@ -59,10 +62,12 @@ def show_menu():
 
     while True:
         try:
-            selection = int(input("To select an option, type the corresponding number, and press Enter.\n"))
+            selection = int(input("To select an option, type the corresponding"
+                                  " number, and press Enter.\n"))
             if selection not in range(1, 7):
                 raise ValueError(
-                    f"Please enter a value between 1 and 6, you entered {selection}"
+                    "Please enter a value between 1 and 6, you "
+                    "entered {selection}"
                 )
             break
         except ValueError as e:
@@ -149,7 +154,8 @@ def instructions():
 
 class Row:
     """ A class for each row object in the dataset """
-    def __init__(self, sku, country, price, revenue, units_sold, daily_average, available, inbound, days_supply):
+    def __init__(self, sku, country, price, revenue, units_sold,
+                 daily_average, available, inbound, days_supply):
         self.sku = sku
         self.country = country
         self.price = price
@@ -167,17 +173,19 @@ def capture_data():
     object for each row within it using the Row constructor.
     """
     print("Capturing data snapshot...\n")
-    num_of_total_rows = len(inventory_data.col_values(1)) + 1
     print("Parsing data rows...\n")
 
     for i in range(1, num_of_total_rows):
         current_row = inventory_data.row_values(i)
         key = current_row[0] + '_' + current_row[1]
-        value = Row(current_row[0], current_row[1], current_row[2], current_row[3], current_row[4], current_row[5], current_row[6], current_row[7], current_row[8])
+        value = Row(current_row[0], current_row[1], current_row[2],
+                    current_row[3], current_row[4], current_row[5],
+                    current_row[6], current_row[7], current_row[8])
         master_dict[key] = value
         sku_list.append(key)
 
-    del master_dict["Merchant SKU_Country"] # Delete the entry containing headers only
+    # Delete the entry containing headers only
+    del master_dict["Merchant SKU_Country"]
     print("Data cached successfully!\n")
     print("Moving to main menu...\n")
     time.sleep(3)
@@ -194,7 +202,8 @@ def adjust_variables():
 
     while True:
         try:
-            x = int(input("What variable would you like to change? Please type a number and press Enter.\n"))
+            x = int(input("What variable would you like to change? Please "
+                          "type a number and press Enter.\n"))
             if handle_other_input(x, "variables") is True:
                 break
         except ValueError as e:
@@ -207,8 +216,9 @@ def adjust_variables():
         while True:
             try:
                 overstock = float(input("Please type a multiplier in to "
-                "represent desired overstock, as either a\nwhole number "
-                "or a number to one decimal place (e.g. 1.2).\n"))
+                                        "represent desired overstock, as "
+                                        "either a\nwhole number or a number to"
+                                        " one decimal place (e.g. 1.2).\n"))
                 break
             except ValueError as e:
                 print(f"\nInvalid input: {e}. Please try again.\n")
@@ -224,8 +234,9 @@ def adjust_variables():
 
         while True:
             try:
-                dos_target = int(input("Please enter a whole number to represent desired "
-                "days of supply target.\n"))
+                dos_target = int(input("Please enter a whole number to "
+                                       "represent desired days of supply "
+                                       "target.\n"))
                 break
             except ValueError as e:
                 print(f"\nInvalid input: {e}. Please try again.\n")
@@ -242,7 +253,10 @@ def query_data():
     data points or calculations within the connected dataset.
     """
 
-    options = ["1) Specific SKU data", "2) SUM, AVERAGE or RANGE of entire column", "3) All values from an entire row"]
+    options = ["1) Specific SKU data",
+               "2) SUM, AVERAGE or RANGE of entire column",
+               "3) All values from an entire row"]
+
     print("\nWhat type of query would you like to make?\n")
     time.sleep(1)
 
@@ -322,47 +336,47 @@ def query_data():
             except ValueError as e:
                 print(f"Invalid input: {e}. Please try again.\n")
 
-        y += 2 # Adjust number for use in following queries
+        y += 2  # Adjust number for use in following queries
 
-        if z == 1: # SUM query
+        if z == 1:  # SUM query
             raw_col = inventory_data.col_values(y)
-            del raw_col[0] # Removes the header string from column
+            del raw_col[0]  # Removes the header string from column
             float_list = []
 
-            for i in raw_col: # Create a new list with floats
+            for i in raw_col:  # Create a new list with floats
                 float_list.append(float(i))
 
             col_sum = round(sum(float_list), 2)
             print(f"The sum of all values from the "
                   f"specified column is {col_sum}.\n")
             input("Press Enter to return to main menu...")
-        elif z == 2: # AVERAGE query
+        elif z == 2:  # AVERAGE query
             raw_col = inventory_data.col_values(y)
-            del raw_col[0] # Removes the header string from column
+            del raw_col[0]  # Removes the header string from column
             float_list = []
 
-            for i in raw_col: # Create a new list with floats
+            for i in raw_col:  # Create a new list with floats
                 float_list.append(float(i))
 
             col_average = round(sum(float_list) / len(float_list), 2)
             print("The mean average of all values from "
-                 f"the specified list is {col_average}.")
+                  f"the specified list is {col_average}.")
             input("Press Enter to return to main menu...")
-        elif z == 3: # RANGE query
+        elif z == 3:  # RANGE query
             raw_col = inventory_data.col_values(y)
-            del raw_col[0] # Removes the header string from column
+            del raw_col[0]  # Removes the header string from column
             float_list = []
 
-            for i in raw_col: # Create a new list with floats
+            for i in raw_col:  # Create a new list with floats
                 float_list.append(float(i))
 
             col_min = round(min(float_list), 2)
             col_max = round(max(float_list), 2)
 
             print("\nThe smallest value in the specified data is "
-                 f"{col_min}.")
+                  f"{col_min}.")
             print("\nThe largest value in the specified data is "
-                 f"{col_max}.")
+                  f"{col_max}.")
             input("\nPress Enter to return to main menu...")
 
     elif x == 3:
@@ -393,7 +407,12 @@ def query_sku(sku):
     """
     Retrieves specific data points from master_dict for user-specified SKU.
     """
-    options = ["1) Price", "2) 30-Day Revenue", "3) 30-Day Units Sold", "4) 30-Day Daily Average", "5) Units Available in Stock", "6) Units Inbound to Warehouse", "7) Days of Supply (exc. Inbound Stock)", "8) Days of Supply (inc. Inbound Stock)"]
+    options = ["1) Price", "2) 30-Day Revenue", "3) 30-Day Units Sold",
+               "4) 30-Day Daily Average", "5) Units Available in Stock",
+               "6) Units Inbound to Warehouse", 
+               "7) Days of Supply (exc. Inbound Stock)",
+               "8) Days of Supply (inc. Inbound Stock)"]
+
     print("\nWhat data do you wish to see for this SKU?\n")
     time.sleep(1)
 
@@ -403,7 +422,8 @@ def query_sku(sku):
 
     while True:
         try:
-            x = int(input("To select an option, type the corresponding number, and press Enter.\n"))
+            x = int(input("To select an option, type the corresponding number,"
+                          " and press Enter.\n"))
             if handle_other_input(x, "sku operation"):
                 break
         except ValueError as e:
@@ -427,7 +447,8 @@ def query_sku(sku):
     elif x == 4:
         # Return daily average
         z = master_dict[sku].daily_average
-        print(f"Over the last 30 days, on average, {sku} has sold {z} units each day.")
+        print(f"Over the last 30 days, on average, {sku} has sold {z} "
+              "units each day.")
         input("Press enter to continue...")
     elif x == 5:
         # Return available units
@@ -437,17 +458,21 @@ def query_sku(sku):
     elif x == 6:
         # Return inbound units
         z = master_dict[sku].inbound
-        print(f"There are currently {z} units inbound to the warehouse for {sku}.")
+        print(f"There are currently {z} units inbound to the warehouse "
+              "for {sku}.")
         input("Press enter to continue...")
     elif x == 7:
         # Return DoS (exc. Inbound)
-        z = float(master_dict[sku].available) / float(master_dict[sku].daily_average)
-        print(f"Excluding inbound stock, {sku} has {z} days of supply remaining.")
+        z = (float(master_dict[sku].available) /
+             float(master_dict[sku].daily_average))
+        print(f"Excluding inbound stock, {sku} has {z} days of supply "
+              "remaining.")
         input("Press enter to continue...")
     elif x == 8:
         # Return DoS (inc. Inbound)
         z = master_dict[sku].days_supply
-        print(f"Including inbound stock, {sku} has {z} days of supply remaining.")
+        print(f"Including inbound stock, {sku} has {z} days of supply "
+              "remaining.")
         input("Press enter to continue...")
 
 
@@ -489,7 +514,8 @@ def calculate_replenishment():
 
 def clear():
     """
-    Clears the CLI. Found on https://www.geeksforgeeks.org/clear-screen-python/.
+    Clears the CLI. Found on
+    https://www.geeksforgeeks.org/clear-screen-python/
     """
     if name == 'nt':
         _ = system('cls')
@@ -521,13 +547,15 @@ def handle_other_input(x, type):
         if x in master_dict:
             return True
         else:
-            print("SKU not recognised - please verify spelling and try again.\n")
+            print("SKU not recognised - please verify spelling and try "
+                  "again.\n")
             return False
     # elif type == "operation query":
     #     if x == "sum" or x == "range" or x == "average":
     #         return True
     #     else:
-    #         print(f"You entered {x}, please enter either 'sum', 'range' or 'average'.\n")
+    #         print(f"You entered {x}, please enter either 'sum', 'range' "
+    #                "or 'average'.\n")
     #         return False
     elif type == "query data":
         if x in range(1, 4):
@@ -545,7 +573,8 @@ def handle_other_input(x, type):
         if x in range(1, num_of_total_rows):
             return True
         else:
-            print(f"You entered {x}, please enter a whole number between {num_of_total_rows}.\n")
+            print(f"You entered {x}, please enter a whole number between 1 "
+                  f"and {num_of_total_rows}.\n")
             return False
     else:
         print("Debug: no block matched within handle_other_input function.")
