@@ -1,4 +1,3 @@
-# Write your code to expect a terminal of 80 characters wide and 24 rows high
 from os import system, name
 import time
 from pprint import pprint
@@ -69,11 +68,11 @@ def show_menu():
             if selection not in range(1, 7):
                 raise ValueError(
                     "Please enter a value between 1 and 6, you "
-                    "entered {selection}"
+                    f"entered {selection}."
                 )
             break
-        except ValueError as e:
-            print(f"Invalid data: {e}. Please try again.\n")
+        except:
+            print("\nInvalid input. Please try again.\n")
 
     return selection
 
@@ -221,8 +220,8 @@ def adjust_variables():
             if handle_other_input(x, "variables") is True:
                 clear()
                 break
-        except ValueError as e:
-            print(f"Invalid input: {e}. Please try again.\n")
+        except:
+            print("\nInvalid input. Please try again.\n")
 
     if x == 1:
         print(f"{'-' * 50}")
@@ -238,13 +237,13 @@ def adjust_variables():
                                         "either a\nwhole number or a number to"
                                         " one decimal place (e.g. 1.2).\n"))
                 break
-            except ValueError as e:
-                print(f"\nInvalid input: {e}. Please try again.\n")
+            except:
+                print("\nInvalid input. Please try again.\n")
 
         print(f"\nAdjusting overstock to {overstock}...")
         time.sleep(2)
         print("\nOverstock variable successfully changed.\n")
-        input("Press Enter to return to main menu...")
+        input("Press Enter to return to main menu...\n")
 
     elif x == 2:
         print(f"{'-' * 50}")
@@ -257,15 +256,16 @@ def adjust_variables():
             try:
                 dos_target = int(input("Please enter a whole number to "
                                        "represent desired days of supply "
-                                       "target.\n"))
+                                       "target, \nand press Enter to "
+                                       "confirm.\n"))
                 break
-            except ValueError as e:
-                print(f"\nInvalid input: {e}. Please try again.\n")
+            except:
+                print("\nInvalid input. Please try again.\n")
 
-        print("\nAdjusting variable...\n")
+        print("\nAdjusting variable...")
         time.sleep(2)
         print(f"\nThe days of supply target is now set to {dos_target}.\n")
-        input("Press Enter to return main menu...")
+        input("Press Enter to return main menu...\n")
 
     elif x == 3:
         pass
@@ -302,8 +302,8 @@ def query_data():
                     f"Please enter a value between 1 and 4, you entered {x}."
                 )
             break
-        except ValueError as e:
-            print(f"Invalid data: {e}. Please try again\n")
+        except:
+            print("Invalid data. Please try again.\n")
 
     if x == 1:
         clear()
@@ -346,11 +346,11 @@ def query_data():
                 if y not in range(1, 8):
                     raise ValueError(
                         "Please enter a value between 1 and 7, you "
-                        f"entered {y}"
+                        f"entered {y}."
                     )
                 break
-            except ValueError as e:
-                print(f"Invalid input: {e}. Please try again.\n")
+            except:
+                print("\nInvalid input. Please try again.\n")
 
         clear()
         print(f"{'-' * 50}")
@@ -372,11 +372,11 @@ def query_data():
                 if z not in range(1, 5):
                     raise ValueError(
                         "Please enter a value between 1 and 4, you "
-                        f"entered {z}"
+                        f"entered {z}."
                     )
                 break
-            except ValueError as e:
-                print(f"Invalid input: {e}. Please try again.\n")
+            except:
+                print("\nInvalid input. Please try again.\n")
 
         y += 2  # Adjust number for use in following queries
 
@@ -391,7 +391,7 @@ def query_data():
             col_sum = round(sum(float_list), 2)
             print(f"\nThe sum of all values from the "
                   f"specified column is {col_sum}.\n")
-            input("Press Enter to return to main menu...")
+            input("Press Enter to return to main menu...\n")
         elif z == 2:  # AVERAGE query
             raw_col = inventory_data.col_values(y)
             del raw_col[0]  # Removes the header string from column
@@ -403,7 +403,7 @@ def query_data():
             col_average = round(sum(float_list) / len(float_list), 2)
             print("\nThe mean average of all values from "
                   f"the specified list is {col_average}.\n")
-            input("Press Enter to return to main menu...")
+            input("Press Enter to return to main menu...\n")
         elif z == 3:  # RANGE query
             raw_col = inventory_data.col_values(y)
             del raw_col[0]  # Removes the header string from column
@@ -419,7 +419,7 @@ def query_data():
                   f"{col_min}.")
             print("\nThe largest value in the specified data is "
                   f"{col_max}.\n")
-            input("Press Enter to return to main menu...")
+            input("Press Enter to return to main menu...\n")
         elif z == 4:
             # Return to Main Menu
             pass
@@ -439,8 +439,8 @@ def query_data():
                         f"{num_of_total_rows}, you entered {x}.\n"
                     )
                 break
-            except ValueError as e:
-                print(f"Invalid data: {e}. Please try again.\n")
+            except:
+                print("\nInvalid data. Please try again.\n")
 
         find_row(x)
 
@@ -479,54 +479,54 @@ def query_sku(sku):
                           " and press Enter.\n"))
             if handle_other_input(x, "sku operation"):
                 break
-        except ValueError as e:
-            print(f"Invalid data: {e}. Please try again.\n")
+        except:
+            print("\nInvalid data. Please try again.\n")
 
     if x == 1:
         # Return price
         z = master_dict[sku].price
         print(f"\nThe price of {sku} is {z}.\n")
-        input("Press Enter to return to main menu...")
+        input("Press Enter to return to main menu...\n")
     elif x == 2:
         # Return revenue
         z = master_dict[sku].revenue
         print(f"\nIn the last 30 days, {sku} has brought in {z} in revenue.\n")
-        input("Press Enter to return to main menu...")
+        input("Press Enter to return to main menu...\n")
     elif x == 3:
         # Return units sold
         z = master_dict[sku].units_sold
         print(f"\nIn the last 30 days, {sku} has sold {z} units.\n")
-        input("Press Enter to return to main menu...")
+        input("Press Enter to return to main menu...\n")
     elif x == 4:
         # Return daily average
         z = master_dict[sku].daily_average
         print(f"\nOver the last 30 days, on average, {sku} has sold {z} "
               "units each day.\n")
-        input("Press Enter to return to main menu...")
+        input("Press Enter to return to main menu...\n")
     elif x == 5:
         # Return available units
         z = master_dict[sku].available
         print(f"\nThere are currently {z} units available to buy for {sku}.\n")
-        input("Press Enter to return to main menu...")
+        input("Press Enter to return to main menu...\n")
     elif x == 6:
         # Return inbound units
         z = master_dict[sku].inbound
         print(f"\nThere are currently {z} units inbound to the warehouse "
               "for {sku}.\n")
-        input("Press Enter to return to main menu...")
+        input("Press Enter to return to main menu...\n")
     elif x == 7:
         # Return DoS (exc. Inbound)
         z = round((float(master_dict[sku].available) /
                   float(master_dict[sku].daily_average)), 1)
         print(f"\nExcluding inbound stock, {sku} has {z} days of supply "
               "remaining.\n")
-        input("Press Enter to return to main menu...")
+        input("Press Enter to return to main menu...\n")
     elif x == 8:
         # Return DoS (inc. Inbound)
         z = master_dict[sku].days_supply
         print(f"\nIncluding inbound stock, {sku} has {z} days of supply "
               "remaining.\n")
-        input("Press Enter to return to main menu...")
+        input("Press Enter to return to main menu...\n")
     elif x == 9:
         # Return to Main Menu
         pass
@@ -541,7 +541,7 @@ def find_row(row):
     pprint(headers)
     pprint(target_row)
 
-    input("\nPress Enter to return to main menu...")
+    input("\nPress Enter to return to main menu...\n")
 
 
 def calculate_replenishment():
@@ -568,7 +568,7 @@ def calculate_replenishment():
     print("\nPrinting final pick list...\n")
     time.sleep(2)
     pprint(pick_list)
-    input("\nPress Enter to return to main menu...")
+    input("\nPress Enter to return to main menu...\n")
 
 
 def clear():
@@ -600,7 +600,7 @@ def handle_other_input(x, query_type):
         if x in range(1, 4):
             return True
         else:
-            print(f"You entered {x}, please enter either 1, 2 or 3.\n")
+            print(f"\nYou entered {x}, please enter either 1, 2 or 3.\n")
             return False
     elif query_type == "sku exist":
         if x in master_dict:
