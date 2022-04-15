@@ -5,7 +5,6 @@ from pprint import pprint
 
 import gspread
 from google.oauth2.service_account import Credentials
-# import csv
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -55,7 +54,9 @@ def show_menu():
                "3) Export Replenishment",
                "4) Adjust Variables", "5) Query Data", "6) Exit"]
     print(f"{'-' * 50}")
-    print("Please select an operation:\n")
+    print("\nMain Menu\n")
+    print(f"{'-' * 50}")
+    print("\nPlease select an operation:\n")
     time.sleep(1)
     for option in options:
         print(f"{option}\n")
@@ -82,28 +83,31 @@ def instructions():
     Prints instructions about the operation of the application
     to the user.
     """
-    print(f"\n{'-' * 50}\n")
+    clear()
+    print(f"{'-' * 50}")
+    print("\nInstructions\n")
+    print(f"{'-' * 50}")
     print("\nWelcome to the Stock Allocation Tool!")
     print(
         "\nThis application connects to an external Google Sheet containing "
-        "inventory and sales data, and provides recommendations about what "
-        "stock should be replenished."
+        "\ninventory and sales data, and provides recommendations about what "
+        "stock \nshould be replenished."
     )
     input("\nPress Enter to continue...\n")
     print(
         "Please note that this application is purely for educational "
-        "purposes, and is intended as a proof of concept rather than "
-        "a complete product."
+        "purposes, \nand is intended as a proof of concept rather than "
+        "a \ncomplete product."
     )
     input("\nPress Enter to continue...\n")
     print(f"\n{'-' * 50}\n")
     print("\n'Capture New Snapshot'")
     print(
         "\nThis option captures and saves data from the connected Google "
-        "Sheet, and allows that data to then be used within this "
-        "application. Please note, this process is carried out "
-        "automatically when booting up. Therefore, this function should "
-        "be used if data is changed in the Google Sheet whilst the "
+        "Sheet, \nand allows that data to then be used within this "
+        "application. \nPlease note, this process is carried out "
+        "automatically when booting \nup. Therefore, this function should "
+        "be used if data is changed in \nthe Google Sheet whilst the "
         "application is already running."
     )
     input("\nPress Enter to continue...\n")
@@ -111,18 +115,18 @@ def instructions():
     print("\n'Export Replenishment'")
     print(
         "\nThis option reads the data from the connected Google Sheet, and "
-        "uses it to calculate a recommended amount of stock to replenish for "
-        "each SKU, in each market. The calculation for this is as follows: "
+        "\nuses it to calculate a recommended amount of stock to replenish for"
+        "\n each SKU, in each market. The calculation for this is as follows: "
     )
     print(
-        "\nStock to Replenish = ((Target Days of Supply - Current Days of "
+        "\nStock to Replenish = ((Target Days of Supply - Current Days \nof "
         "Supply) * Daily Average) * Overstock Multiplier\n"
     )
     input("\nPress Enter to continue...\n")
     print(
         "The default values for 'Target Days of Supply' and 'Overstock "
-        "Multiplier' are 50 and 1, respectively. If you so wish, these "
-        "values can be changed by using the 'Adjust Variables' option "
+        "Multiplier' \nare 50 and 1, respectively. If you so wish, these "
+        "values can be changed by \nusing the 'Adjust Variables' option "
         "from the main menu."
     )
     input("\nPress Enter to continue...\n")
@@ -130,8 +134,8 @@ def instructions():
     print("\n'Adjust Variables'")
     print(
         "\nThis option allows the user to manually change the values "
-        "of the 'Target Days of Supply' and 'Overstock' variables, "
-        "which as described above, are a key part of the "
+        "of the 'Target Days \nof Supply' and 'Overstock' variables, "
+        "which as described above, are \na key part of the "
         "replenishment calculation."
     )
     input("\nPress Enter to continue...\n")
@@ -139,10 +143,10 @@ def instructions():
     print("\n'Query Data'")
     print(
         "\nThis option allows the user to examine the saved data "
-        "on a more granular level. You can choose to examine "
-        "information for a specific SKU, look at all values in a "
+        "on a more granular \nlevel. You can choose to examine "
+        "information for a specific SKU, look at all \nvalues in a "
         "given row or column, or calculate the SUM, MEAN AVERAGE, "
-        "or RANGE of a given column."
+        "or \nRANGE of a given column."
     )
     input("\nPress Enter to continue...\n")
     print(f"\n{'-' * 50}\n")
@@ -198,21 +202,34 @@ def adjust_variables():
     """
     global overstock
     global dos_target
+    clear()
+    print(f"{'-' * 50}")
+    print("\nAdjust Variables\n")
+    print(f"{'-' * 50}")
+    time.sleep(0.5)
     print("\n1) Overstock\n")
+    time.sleep(0.5)
     print("2) Days of Supply Target\n")
+    time.sleep(0.5)
+    print("3) Return to Main Menu\n")
+    time.sleep(0.5)
 
     while True:
         try:
             x = int(input("What variable would you like to change? Please "
                           "type a number and press Enter.\n"))
             if handle_other_input(x, "variables") is True:
+                clear()
                 break
         except ValueError as e:
             print(f"Invalid input: {e}. Please try again.\n")
 
     if x == 1:
+        print(f"{'-' * 50}")
+        print("\nAdjust Variables\n")
+        print(f"{'-' * 50}")
         print(f"\nThe current overstock multiplier is set to x{overstock}\n")
-        time.sleep(2)
+        time.sleep(0.5)
 
         while True:
             try:
@@ -230,8 +247,11 @@ def adjust_variables():
         input("Press Enter to return to main menu...")
 
     elif x == 2:
+        print(f"{'-' * 50}")
+        print("\nAdjust Variables\n")
+        print(f"{'-' * 50}")
         print(f"\nThe current days of supply target is set to {dos_target}.\n")
-        time.sleep(2)
+        time.sleep(0.5)
 
         while True:
             try:
@@ -247,6 +267,9 @@ def adjust_variables():
         print(f"\nThe days of supply target is now set to {dos_target}.\n")
         input("Press Enter to return main menu...")
 
+    elif x == 3:
+        pass
+
 
 def query_data():
     """
@@ -256,8 +279,13 @@ def query_data():
 
     options = ["1) Specific SKU data",
                "2) SUM, AVERAGE or RANGE of entire column",
-               "3) All values from an entire row"]
+               "3) All values from an entire row",
+               "4) Return to Main Menu"]
 
+    clear()
+    print(f"{'-' * 50}")
+    print("\nQuery Data\n")
+    print(f"{'-' * 50}")
     print("\nWhat type of query would you like to make?\n")
     time.sleep(1)
 
@@ -269,34 +297,42 @@ def query_data():
         try:
             x = int(input("To select an option, type the corresponding number,"
                           " and press Enter.\n"))
-            if x not in range(1, 4):
+            if x not in range(1, 5):
                 raise ValueError(
-                    f"Please enter a value between 1 and 3, you entered {x}."
+                    f"Please enter a value between 1 and 4, you entered {x}."
                 )
             break
         except ValueError as e:
             print(f"Invalid data: {e}. Please try again\n")
 
     if x == 1:
-        print("Retrieving SKU list...")
+        clear()
+        print(f"{'-' * 50}")
+        print("\nQuery Data\n")
+        print(f"{'-' * 50}")
+        print("\nRetrieving SKU list...\n")
         pprint(sku_list)
 
         while True:
             target = input("\nWhich SKU would you like to query? Please "
-                           "type it exactly as it appears in the list, without"
-                           " quotation marks, and press Enter.\n")
+                           "type it exactly as it appears in the\nlist, "
+                           "without quotation marks, and press Enter.\n")
             if handle_other_input(target, "sku exist"):
                 break
 
-        print("\nValid SKU entered!\n")
+        print("\nValid SKU entered!")
         query_sku(target)
 
     elif x == 2:
         options = ["1) Price", "2) 30-Day Revenue", "3) 30-Days Units Sold",
                    "4) 30-Day Daily Average", "5) Available Units",
                    "6) Inbound Units", "7) Days of Supply "
-                   "(inc. Inbound)"]
+                   "(inc. Inbound)", "8) Return to Main Menu"]
 
+        clear()
+        print(f"{'-' * 50}")
+        print("\nQuery Data\n")
+        print(f"{'-' * 50}")
         print("\nWhat data would you like to perform a calculation on?\n")
 
         for option in options:
@@ -316,9 +352,14 @@ def query_data():
             except ValueError as e:
                 print(f"Invalid input: {e}. Please try again.\n")
 
+        clear()
+        print(f"{'-' * 50}")
+        print("\nQuery Data\n")
+        print(f"{'-' * 50}")
         print("\nWhat calculation would you like to perform on the column?\n")
 
-        options = ["1) SUM of data", "2) AVERAGE of data", "3) RANGE of data"]
+        options = ["1) SUM of data", "2) AVERAGE of data",
+                   "3) RANGE of data", "4) Return to Main Menu"]
 
         for option in options:
             print(f"{option}\n")
@@ -328,9 +369,9 @@ def query_data():
             try:
                 z = int(input("To select an option, type the corresponding "
                               "number, and press Enter.\n"))
-                if z not in range(1, 4):
+                if z not in range(1, 5):
                     raise ValueError(
-                        "Please enter a value between 1 and 3, you "
+                        "Please enter a value between 1 and 4, you "
                         f"entered {z}"
                     )
                 break
@@ -348,7 +389,7 @@ def query_data():
                 float_list.append(float(i))
 
             col_sum = round(sum(float_list), 2)
-            print(f"The sum of all values from the "
+            print(f"\nThe sum of all values from the "
                   f"specified column is {col_sum}.\n")
             input("Press Enter to return to main menu...")
         elif z == 2:  # AVERAGE query
@@ -360,8 +401,8 @@ def query_data():
                 float_list.append(float(i))
 
             col_average = round(sum(float_list) / len(float_list), 2)
-            print("The mean average of all values from "
-                  f"the specified list is {col_average}.")
+            print("\nThe mean average of all values from "
+                  f"the specified list is {col_average}.\n")
             input("Press Enter to return to main menu...")
         elif z == 3:  # RANGE query
             raw_col = inventory_data.col_values(y)
@@ -377,8 +418,11 @@ def query_data():
             print("\nThe smallest value in the specified data is "
                   f"{col_min}.")
             print("\nThe largest value in the specified data is "
-                  f"{col_max}.")
-            input("\nPress Enter to return to main menu...")
+                  f"{col_max}.\n")
+            input("Press Enter to return to main menu...")
+        elif z == 4:
+            # Return to Main Menu
+            pass
 
     elif x == 3:
         # num_of_total_rows = len(inventory_data.col_values(1))
@@ -400,6 +444,9 @@ def query_data():
 
         find_row(x)
 
+    elif x == 4:
+        pass
+
     else:
         print("Input not recognised. Please try again.")
 
@@ -412,9 +459,14 @@ def query_sku(sku):
                "4) 30-Day Daily Average", "5) Units Available in Stock",
                "6) Units Inbound to Warehouse",
                "7) Days of Supply (exc. Inbound Stock)",
-               "8) Days of Supply (inc. Inbound Stock)"]
+               "8) Days of Supply (inc. Inbound Stock)",
+               "9) Return to Main Menu"]
 
-    print("\nWhat data do you wish to see for this SKU?\n")
+    clear()
+    print(f"{'-' * 50}")
+    print("\nQuery Data\n")
+    print(f"{'-' * 50}")
+    print(f"\nWhat data do you wish to see for the SKU '{sku}'?\n")
     time.sleep(1)
 
     for option in options:
@@ -433,48 +485,51 @@ def query_sku(sku):
     if x == 1:
         # Return price
         z = master_dict[sku].price
-        print(f"The price of {sku} is {z}.\n")
-        input("Press enter to continue...")
+        print(f"\nThe price of {sku} is {z}.\n")
+        input("Press Enter to return to main menu...")
     elif x == 2:
         # Return revenue
         z = master_dict[sku].revenue
-        print(f"In the last 30 days, {sku} has brought in {z} in revenue.")
-        input("Press enter to continue...")
+        print(f"\nIn the last 30 days, {sku} has brought in {z} in revenue.\n")
+        input("Press Enter to return to main menu...")
     elif x == 3:
         # Return units sold
         z = master_dict[sku].units_sold
-        print(f"In the last 30 days, {sku} has sold {z} units.")
-        input("Press enter to continue...")
+        print(f"\nIn the last 30 days, {sku} has sold {z} units.\n")
+        input("Press Enter to return to main menu...")
     elif x == 4:
         # Return daily average
         z = master_dict[sku].daily_average
-        print(f"Over the last 30 days, on average, {sku} has sold {z} "
-              "units each day.")
-        input("Press enter to continue...")
+        print(f"\nOver the last 30 days, on average, {sku} has sold {z} "
+              "units each day.\n")
+        input("Press Enter to return to main menu...")
     elif x == 5:
         # Return available units
         z = master_dict[sku].available
-        print(f"There are currently {z} units available to buy for {sku}.")
-        input("Press enter to continue...")
+        print(f"\nThere are currently {z} units available to buy for {sku}.\n")
+        input("Press Enter to return to main menu...")
     elif x == 6:
         # Return inbound units
         z = master_dict[sku].inbound
-        print(f"There are currently {z} units inbound to the warehouse "
-              "for {sku}.")
-        input("Press enter to continue...")
+        print(f"\nThere are currently {z} units inbound to the warehouse "
+              "for {sku}.\n")
+        input("Press Enter to return to main menu...")
     elif x == 7:
         # Return DoS (exc. Inbound)
-        z = (float(master_dict[sku].available) /
-             float(master_dict[sku].daily_average))
-        print(f"Excluding inbound stock, {sku} has {z} days of supply "
-              "remaining.")
-        input("Press enter to continue...")
+        z = round((float(master_dict[sku].available) /
+                  float(master_dict[sku].daily_average)), 1)
+        print(f"\nExcluding inbound stock, {sku} has {z} days of supply "
+              "remaining.\n")
+        input("Press Enter to return to main menu...")
     elif x == 8:
         # Return DoS (inc. Inbound)
         z = master_dict[sku].days_supply
-        print(f"Including inbound stock, {sku} has {z} days of supply "
-              "remaining.")
-        input("Press enter to continue...")
+        print(f"\nIncluding inbound stock, {sku} has {z} days of supply "
+              "remaining.\n")
+        input("Press Enter to return to main menu...")
+    elif x == 9:
+        # Return to Main Menu
+        pass
 
 
 def find_row(row):
@@ -494,23 +549,26 @@ def calculate_replenishment():
     Reads data and calculates required replenishment per SKU
     to hit days of supply target variable.
     """
+    pick_list = []
     for key in master_dict:
         daily_average = float(master_dict[key].daily_average)
         current_dos = int(float(master_dict[key].days_supply))
         if current_dos < dos_target:
             stock_to_send = int((dos_target - current_dos) * daily_average)
-            adjusted_stock_to_send = stock_to_send * overstock
+            adjusted_stock_to_send = round(stock_to_send * overstock)
             entry = str(key + ' : ' + str(adjusted_stock_to_send))
             pick_list.append(entry)
 
+    clear()
+    print(f"{'-' * 50}")
+    print("\nExport Replenishment\n")
+    print(f"{'-' * 50}")
+    print("\nThe following data shows how many units should be sent "
+          "to replenish \neach SKU.")
     print("\nPrinting final pick list...\n")
+    time.sleep(2)
     pprint(pick_list)
-    input("\nPress Enter to continue...")
-    # with open(r'C:\Temp\picklist.txt', 'w') as f:
-    #     f.write(str(pick_list))
-    # # with open('picklist.csv', 'w', newline = '') as csvfile:
-    # #     my_writer = csv.writer(csvfile, delimiter = ' ')
-    # #     my_writer.writerow(pick_list)
+    input("\nPress Enter to return to main menu...")
 
 
 def clear():
@@ -528,49 +586,49 @@ def quit_program():
     """
     Closes the program.
     """
-    print("Exiting application...")
+    print("\nExiting application...")
     time.sleep(2)
     clear()
     exit()
 
 
-def handle_other_input(x, type):
+def handle_other_input(x, query_type):
     """
     Validates input across different types of user-input.
     """
-    if type == "variables":
-        if x in range(1, 3):
+    if query_type == "variables":
+        if x in range(1, 4):
             return True
         else:
-            print(f"You entered {x}, please enter either 1 or 2.\n")
+            print(f"You entered {x}, please enter either 1, 2 or 3.\n")
             return False
-    elif type == "sku exist":
+    elif query_type == "sku exist":
         if x in master_dict:
             return True
         else:
             print("SKU not recognised - please verify spelling and try "
                   "again.\n")
             return False
-    # elif type == "operation query":
+    # elif query_type == "operation query":
     #     if x == "sum" or x == "range" or x == "average":
     #         return True
     #     else:
     #         print(f"You entered {x}, please enter either 'sum', 'range' "
     #                "or 'average'.\n")
     #         return False
-    elif type == "query data":
+    elif query_type == "query data":
         if x in range(1, 4):
             return True
         else:
             print(f"You entered {x}, please enter a value between 1 and 3.\n")
             return False
-    elif type == "sku operation":
-        if x in range(1, 9):
+    elif query_type == "sku operation":
+        if x in range(1, 10):
             return True
         else:
             print(f"You entered {x}, please enter a number between 1 and 8.\n")
             return False
-    elif type == "row query":
+    elif query_type == "row query":
         if x in range(1, num_of_total_rows):
             return True
         else:

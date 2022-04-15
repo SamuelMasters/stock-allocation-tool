@@ -1,0 +1,1 @@
+['Test SKU1_GB : 13', 'Test SKU1_EUR : 8', 'Test SKU1_NA : 3', 'Test SKU2_EUR : 24', 'Test SKU2_NA : 11', 'Test SKU3_GB : 43', 'Test SKU3_EUR : 10', 'Test SKU3_NA : 40', 'Test SKU5_GB : 6', 'Test SKU5_EUR : 2', 'Test SKU5_NA : 18', 'Test SKU6_GB : 7', 'Test SKU6_EUR : 25', 'Test SKU6_NA : 4', 'Test SKU7_GB : 21']
