@@ -154,6 +154,7 @@ def instructions():
         "\nThis option allows the user to safely end the program."
     )
     input("\nPress Enter to return to main menu...\n")
+    clear()
 
 
 class Row:
@@ -270,6 +271,8 @@ def adjust_variables():
     elif x == 3:
         pass
 
+    clear()
+
 
 def query_data():
     """
@@ -303,7 +306,7 @@ def query_data():
                 )
             break
         except:
-            print("Invalid data. Please try again.\n")
+            print("Invalid input. Please try again.\n")
 
     if x == 1:
         clear()
@@ -440,7 +443,7 @@ def query_data():
                     )
                 break
             except:
-                print("\nInvalid data. Please try again.\n")
+                print("\nInvalid input. Please try again.\n")
 
         find_row(x)
 
@@ -480,7 +483,7 @@ def query_sku(sku):
             if handle_other_input(x, "sku operation"):
                 break
         except:
-            print("\nInvalid data. Please try again.\n")
+            print("\nInvalid input. Please try again.\n")
 
     if x == 1:
         # Return price
@@ -573,7 +576,7 @@ def calculate_replenishment():
 
 def clear():
     """
-    Clears the CLI. Found on
+    Clears the terminal. Found on
     https://www.geeksforgeeks.org/clear-screen-python/
     """
     if name == 'nt':
