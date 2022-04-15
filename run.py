@@ -99,6 +99,7 @@ def instructions():
         "a \ncomplete product."
     )
     input("\nPress Enter to continue...\n")
+    clear()
     print(f"\n{'-' * 50}\n")
     print("\n'Capture New Snapshot'")
     print(
@@ -113,15 +114,16 @@ def instructions():
     print(f"\n{'-' * 50}\n")
     print("\n'Export Replenishment'")
     print(
-        "\nThis option reads the data from the connected Google Sheet, and "
-        "\nuses it to calculate a recommended amount of stock to replenish for"
-        "\n each SKU, in each market. The calculation for this is as follows: "
+        "\nThis option reads the data from the connected Google Sheet, and"
+        "\n uses it to calculate a recommended amount of stock to replenish "
+        "\n for each SKU, in each market. The calculation for this is as  "
+        "follows:"
     )
     print(
         "\nStock to Replenish = ((Target Days of Supply - Current Days \nof "
         "Supply) * Daily Average) * Overstock Multiplier\n"
     )
-    input("\nPress Enter to continue...\n")
+    # input("\nPress Enter to continue...\n")
     print(
         "The default values for 'Target Days of Supply' and 'Overstock "
         "Multiplier' \nare 50 and 1, respectively. If you so wish, these "
@@ -129,6 +131,7 @@ def instructions():
         "from the main menu."
     )
     input("\nPress Enter to continue...\n")
+    clear()
     print(f"\n{'-' * 50}\n")
     print("\n'Adjust Variables'")
     print(
@@ -148,13 +151,13 @@ def instructions():
         "or \nRANGE of a given column."
     )
     input("\nPress Enter to continue...\n")
+    clear()
     print(f"\n{'-' * 50}\n")
     print("\n'Exit'")
     print(
         "\nThis option allows the user to safely end the program."
     )
     input("\nPress Enter to return to main menu...\n")
-    clear()
 
 
 class Row:
@@ -428,15 +431,18 @@ def query_data():
             pass
 
     elif x == 3:
-        # num_of_total_rows = len(inventory_data.col_values(1))
+        clear()
+        print(f"{'-' * 50}")
+        print("\nQuery Data\n")
+        print(f"{'-' * 50}")
         print(f"\nThere are {num_of_total_rows} total rows. Which "
-              "would you like to examine?")
+              "row would you like to examine?")
 
         while True:
             try:
                 x = int(input(f"\nPlease type a whole number between 1 and "
                               f"{num_of_total_rows}.\n"))
-                if x not in range(1, num_of_total_rows):
+                if x not in range(1, (num_of_total_rows + 1)):
                     raise ValueError(
                         f"\nPlease enter a whole number between 1 and "
                         f"{num_of_total_rows}, you entered {x}.\n"
@@ -541,6 +547,9 @@ def find_row(row):
     """
 
     target_row = inventory_data.row_values(row)
+    print("\nThe headers and data correspond in their order. For example, "
+          "the first value\nin your selected row is situated under the 'SKU' "
+          "header in the dataset.\n")
     pprint(headers)
     pprint(target_row)
 
@@ -579,9 +588,9 @@ def clear():
     Clears the terminal. Found on
     https://www.geeksforgeeks.org/clear-screen-python/
     """
-    if name == 'nt':
+    if name == 'nt':  # For Windows devices
         _ = system('cls')
-    else:
+    else:  # For non-Windows devices
         _ = system('clear')
 
 
@@ -648,18 +657,24 @@ def handle_menu_input(x):
     """
     if x == 1:
         instructions()
+        clear()
     elif x == 2:
         global sku_list
         sku_list = []
         capture_data()
+        clear()
     elif x == 3:
         calculate_replenishment()
+        clear()
     elif x == 4:
         adjust_variables()
+        clear()
     elif x == 5:
         query_data()
+        clear()
     elif x == 6:
         quit_program()
+        clear()
     else:
         print("Input not recognised, please try again.\n")
 
