@@ -72,7 +72,7 @@ def show_menu():
                     f"entered {selection}."
                 )
             break
-        except:
+        except ValueError:
             print("\nInvalid input. Please try again.\n")
 
     return selection
@@ -230,7 +230,7 @@ def adjust_variables():
             if handle_other_input(x, "variables") is True:
                 clear()
                 break
-        except:
+        except ValueError:
             print("\nInvalid input. Please try again.\n")
 
     if x == 1:
@@ -247,7 +247,7 @@ def adjust_variables():
                                         "either a\nwhole number or a number to"
                                         " one decimal place (e.g. 1.2).\n"))
                 break
-            except:
+            except ValueError:
                 print("\nInvalid input. Please try again.\n")
 
         print(f"\nAdjusting overstock to {overstock}...")
@@ -269,7 +269,7 @@ def adjust_variables():
                                        "target, \nand press Enter to "
                                        "confirm.\n"))
                 break
-            except:
+            except ValueError:
                 print("\nInvalid input. Please try again.\n")
 
         print("\nAdjusting variable...")
@@ -314,7 +314,7 @@ def query_data():
                     f"Please enter a value between 1 and 4, you entered {x}."
                 )
             break
-        except:
+        except ValueError:
             print("Invalid input. Please try again.\n")
 
     if x == 1:
@@ -361,7 +361,7 @@ def query_data():
                         f"entered {y}."
                     )
                 break
-            except:
+            except ValueError:
                 print("\nInvalid input. Please try again.\n")
 
         if y == 8:
@@ -390,7 +390,7 @@ def query_data():
                         f"entered {z}."
                     )
                 break
-            except:
+            except ValueError:
                 print("\nInvalid input. Please try again.\n")
 
         y += 2  # Adjust number for use in following queries
@@ -456,7 +456,7 @@ def query_data():
                         f"{num_of_total_rows}, you entered {x}.\n"
                     )
                 break
-            except:
+            except ValueError:
                 print("\nInvalid input. Please try again.\n")
 
         find_row(x)
@@ -496,7 +496,7 @@ def query_sku(sku):
                           " and press Enter.\n"))
             if handle_other_input(x, "sku operation"):
                 break
-        except:
+        except ValueError:
             print("\nInvalid input. Please try again.\n")
 
     if x == 1:
