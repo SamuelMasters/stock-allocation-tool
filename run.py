@@ -57,11 +57,12 @@ def show_menu():
     print(f"{'-' * 50}")
     print("\nPlease select an operation:\n")
     time.sleep(1)
+
     for option in options:
         print(f"{option}\n")
         time.sleep(0.5)
 
-    while True:
+    while True:  # Loop until valid input given
         try:
             selection = int(input("To select an option, type the corresponding"
                                   " number, and press Enter.\n"))
@@ -111,6 +112,7 @@ def instructions():
         "application is already running."
     )
     input("\nPress Enter to continue...\n")
+    clear()
     print(f"\n{'-' * 50}\n")
     print("\n'Export Replenishment'")
     print(
@@ -123,7 +125,6 @@ def instructions():
         "\nStock to Replenish = ((Target Days of Supply - Current Days \nof "
         "Supply) * Daily Average) * Overstock Multiplier\n"
     )
-    # input("\nPress Enter to continue...\n")
     print(
         "The default values for 'Target Days of Supply' and 'Overstock "
         "Multiplier' \nare 50 and 1, respectively. If you so wish, these "
@@ -161,7 +162,11 @@ def instructions():
 
 
 class Row:
-    """ A class for each row object in the dataset """
+    """
+    A class for each row object in the dataset. Used to cache
+    the connected dataset by saving each row of data as a
+    new row object.
+    """
     def __init__(self, sku, country, price, revenue, units_sold,
                  daily_average, available, inbound, days_supply):
         self.sku = sku
@@ -183,6 +188,7 @@ def capture_data():
     print("Capturing data snapshot...\n")
     print("Parsing data rows...\n")
 
+    # Create new objects for each row of data using Row class
     for i in range(1, num_of_total_rows):
         current_row = inventory_data.row_values(i)
         key = current_row[0] + '_' + current_row[1]
@@ -217,7 +223,7 @@ def adjust_variables():
     print("3) Return to Main Menu\n")
     time.sleep(0.5)
 
-    while True:
+    while True:  # Loop until valid input received
         try:
             x = int(input("What variable would you like to change? Please "
                           "type a number and press Enter.\n"))
@@ -234,7 +240,7 @@ def adjust_variables():
         print(f"\nThe current overstock multiplier is set to x{overstock}\n")
         time.sleep(0.5)
 
-        while True:
+        while True:  # Loop until valid input received
             try:
                 overstock = float(input("Please type a multiplier in to "
                                         "represent desired overstock, as "
@@ -256,7 +262,7 @@ def adjust_variables():
         print(f"\nThe current days of supply target is set to {dos_target}.\n")
         time.sleep(0.5)
 
-        while True:
+        while True:  # Loop until valid input received
             try:
                 dos_target = int(input("Please enter a whole number to "
                                        "represent desired days of supply "
@@ -271,8 +277,8 @@ def adjust_variables():
         print(f"\nThe days of supply target is now set to {dos_target}.\n")
         input("Press Enter to return main menu...\n")
 
-    elif x == 3:
-        pass
+    elif x == 3:  # Return to main menu
+        return
 
     clear()
 
@@ -299,7 +305,7 @@ def query_data():
         print(f"{option}\n")
         time.sleep(0.5)
 
-    while True:
+    while True:  # Loop until valid input received
         try:
             x = int(input("To select an option, type the corresponding number,"
                           " and press Enter.\n"))
@@ -319,7 +325,7 @@ def query_data():
         print("\nRetrieving SKU list...\n")
         pprint(sku_list)
 
-        while True:
+        while True:  # Loop until valid input received
             target = input("\nWhich SKU would you like to query? Please "
                            "type it exactly as it appears in the\nlist, "
                            "without quotation marks, and press Enter.\n")
@@ -345,18 +351,21 @@ def query_data():
             print(f"{option}\n")
             time.sleep(0.5)
 
-        while True:
+        while True:  # Loop until valid input received
             try:
                 y = int(input("To select an option, type the corresponding "
                               "number, and press Enter.\n"))
-                if y not in range(1, 8):
+                if y not in range(1, 9):
                     raise ValueError(
-                        "Please enter a value between 1 and 7, you "
+                        "Please enter a value between 1 and 8, you "
                         f"entered {y}."
                     )
                 break
             except:
                 print("\nInvalid input. Please try again.\n")
+
+        if y == 8:
+            return  # Return to main menu without continuing through function
 
         clear()
         print(f"{'-' * 50}")
@@ -371,7 +380,7 @@ def query_data():
             print(f"{option}\n")
             time.sleep(0.5)
 
-        while True:
+        while True:  # Loop until valid input received
             try:
                 z = int(input("To select an option, type the corresponding "
                               "number, and press Enter.\n"))
@@ -427,8 +436,7 @@ def query_data():
                   f"{col_max}.\n")
             input("Press Enter to return to main menu...\n")
         elif z == 4:
-            # Return to Main Menu
-            pass
+            return  # Return to Main Menu
 
     elif x == 3:
         clear()
@@ -441,7 +449,7 @@ def query_data():
         while True:
             try:
                 x = int(input(f"\nPlease type a whole number between 1 and "
-                              f"{num_of_total_rows}.\n"))
+                              f"{num_of_total_rows} and press Enter.\n"))
                 if x not in range(1, (num_of_total_rows + 1)):
                     raise ValueError(
                         f"\nPlease enter a whole number between 1 and "
@@ -454,7 +462,7 @@ def query_data():
         find_row(x)
 
     elif x == 4:
-        pass
+        return
 
     else:
         print("Input not recognised. Please try again.")
@@ -482,7 +490,7 @@ def query_sku(sku):
         print(f"{option}\n")
         time.sleep(0.5)
 
-    while True:
+    while True:  # Loop until valid input received
         try:
             x = int(input("To select an option, type the corresponding number,"
                           " and press Enter.\n"))
@@ -537,8 +545,7 @@ def query_sku(sku):
               "remaining.\n")
         input("Press Enter to return to main menu...\n")
     elif x == 9:
-        # Return to Main Menu
-        pass
+        return  # Return to Main Menu
 
 
 def find_row(row):
@@ -561,7 +568,7 @@ def calculate_replenishment():
     Reads data and calculates required replenishment per SKU
     to hit days of supply target variable.
     """
-    pick_list = []
+    pick_list = []  # Clean list variable before appending fresh values
     for key in master_dict:
         daily_average = float(master_dict[key].daily_average)
         current_dos = int(float(master_dict[key].days_supply))
@@ -621,13 +628,6 @@ def handle_other_input(x, query_type):
             print("SKU not recognised - please verify spelling and try "
                   "again.\n")
             return False
-    # elif query_type == "operation query":
-    #     if x == "sum" or x == "range" or x == "average":
-    #         return True
-    #     else:
-    #         print(f"You entered {x}, please enter either 'sum', 'range' "
-    #                "or 'average'.\n")
-    #         return False
     elif query_type == "query data":
         if x in range(1, 4):
             return True
@@ -647,8 +647,6 @@ def handle_other_input(x, query_type):
             print(f"You entered {x}, please enter a whole number between 1 "
                   f"and {num_of_total_rows}.\n")
             return False
-    else:
-        print("Debug: no block matched within handle_other_input function.")
 
 
 def handle_menu_input(x):
